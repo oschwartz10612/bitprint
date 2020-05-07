@@ -1,0 +1,19 @@
+{
+  "hosting": [
+    {
+      "target": "bitprint",
+      "public": "dist/bitprint",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  ]
+}

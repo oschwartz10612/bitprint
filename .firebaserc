@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "bitprint-9d203": {
+      "hosting": {
+        "bitprint": [
+          "bitprint-9d203"
+        ]
+      }
+    }
+  }
+}

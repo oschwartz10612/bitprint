@@ -1,0 +1,27 @@
+<mat-form-field>
+  <mat-label>Address</mat-label>
+  <input matInput #address />
+</mat-form-field>
+
+<mat-form-field>
+  <mat-label>Name</mat-label>
+  <input matInput #name />
+</mat-form-field>
+
+<button
+  mat-button
+  color="primary"
+  (click)="getImage(name.value, address.value)"
+>
+  Refresh
+</button>
+
+<img
+  [src]="imageToShow"
+  alt="Place image title"
+  *ngIf="!isImageLoading; else noImageFound"
+  [attr.width]="'500px'" [attr.height]="'500px'"
+/>
+<ng-template #noImageFound>
+  <mat-spinner></mat-spinner>
+</ng-template>
