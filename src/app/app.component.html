@@ -13,7 +13,14 @@
   color="primary"
   (click)="getImage(name.value, address.value)"
 >
-  Refresh
+  Refresh Image
+</button>
+<button
+  mat-button
+  color="primary"
+  (click)="getStl(name.value, address.value)"
+>
+  Generate Stl
 </button>
 
 <img
@@ -25,3 +32,23 @@
 <ng-template #noImageFound>
   <mat-spinner></mat-spinner>
 </ng-template>
+
+
+
+<ng-container *ngIf="(stlToDownload != null) && (stlToDownload != '')">
+  <a
+  mat-button
+  color="warning"
+  [href]="stlToDownload"
+  *ngIf="!isStlLoading; else noStlFound"
+  >
+  Downlaod Stl
+  </a>
+</ng-container>
+
+
+<ng-container *ngIf="isStlLoading">
+  <mat-spinner></mat-spinner>
+</ng-container>
+
+

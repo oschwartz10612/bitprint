@@ -20,6 +20,7 @@ export type ColorSchemes =
 
 interface ImgResponse {
   url: string;
+  id: string;
 }
 
 @Injectable({
@@ -129,5 +130,20 @@ export class ImageService {
     };
 
     return this.http.post<ImgResponse>("/api/png", payload, httpOptions);
+  }
+
+  getStl(
+    code: string
+  ): Observable<ImgResponse> {
+    const payload = new HttpParams()
+      .set("code", code);
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/x-www-form-urlencoded",
+      }),
+    };
+
+    return this.http.post<ImgResponse>("/api/stl", payload, httpOptions);
   }
 }
