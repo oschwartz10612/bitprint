@@ -1,0 +1,67 @@
+<div class="container-fluid mt-3">
+  <div class="row">
+    <div class="col-md-6 text-center" [attr.height]="imgSize">
+      <img
+        [src]="imageToShow"
+        *ngIf="!isImageLoading; else noImageFound"
+        class="img-fluid mainImg"
+      />
+
+      <ng-template #noImageFound>
+        <mat-spinner></mat-spinner>
+      </ng-template>
+
+      <br />
+    </div>
+    <div class="col-md-6" >
+      <div class="picForm">
+        <mat-form-field class="formFullWidth">
+          <mat-label>Address</mat-label>
+          <input matInput #address />
+        </mat-form-field>
+        <br />
+        <mat-form-field class="formFullWidth">
+          <mat-label>Name</mat-label>
+          <input matInput #name />
+        </mat-form-field>
+      </div>
+
+      <br />
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="getImage(name.value, address.value)"
+      >
+        Refresh Image
+      </button>
+
+      <a  mat-raised-button color="primary" routerLink="/checkout">Buy Now</a>
+
+
+      <button
+        mat-raised-button
+        color="accent"
+        class="ml-4"
+        (click)="getStl(name.value, address.value)"
+      >
+        Generate Stl
+      </button>
+
+      <ng-container *ngIf="stlToDownload != null && stlToDownload != ''">
+        <a
+          mat-raised-button
+          color="warning"
+          class="ml-4"
+          [href]="stlToDownload"
+          *ngIf="!isStlLoading"
+        >
+          Downlaod Stl
+        </a>
+      </ng-container>
+
+      <ng-container *ngIf="isStlLoading">
+        <mat-spinner></mat-spinner>
+      </ng-container>
+    </div>
+  </div>
+</div>

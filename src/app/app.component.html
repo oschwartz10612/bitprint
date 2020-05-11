@@ -1,54 +1,21 @@
-<mat-form-field>
-  <mat-label>Address</mat-label>
-  <input matInput #address />
-</mat-form-field>
+<nav class="site-header sticky-top py-1">
+  <div class="container d-flex flex-column flex-md-row justify-content-between">
+    <a class="py-2" href="#">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="d-block mx-auto"><circle cx="12" cy="12" r="10"></circle><line x1="14.31" y1="8" x2="20.05" y2="17.94"></line><line x1="9.69" y1="8" x2="21.17" y2="8"></line><line x1="7.38" y1="12" x2="13.12" y2="2.06"></line><line x1="9.69" y1="16" x2="3.95" y2="6.06"></line><line x1="14.31" y1="16" x2="2.83" y2="16"></line><line x1="16.62" y1="12" x2="10.88" y2="21.94"></line></svg>
+    </a>
+    <a class="py-2 d-none d-md-inline-block" href="#">Product</a>
+    <a class="py-2 d-none d-md-inline-block" href="#">About</a>
+    <a class="py-2 d-none d-md-inline-block" href="#">Support</a>
+    <a class="py-2 d-none d-md-inline-block" href="#">Checkout</a>
+  </div>
+</nav>
+<router-outlet></router-outlet>
 
-<mat-form-field>
-  <mat-label>Name</mat-label>
-  <input matInput #name />
-</mat-form-field>
-
-<button
-  mat-button
-  color="primary"
-  (click)="getImage(name.value, address.value)"
->
-  Refresh Image
-</button>
-<button
-  mat-button
-  color="primary"
-  (click)="getStl(name.value, address.value)"
->
-  Generate Stl
-</button>
-
-<img
-  [src]="imageToShow"
-  alt="Place image title"
-  *ngIf="!isImageLoading; else noImageFound"
-  [attr.width]="'500px'" [attr.height]="'500px'"
-/>
-<ng-template #noImageFound>
-  <mat-spinner></mat-spinner>
-</ng-template>
-
-
-
-<ng-container *ngIf="(stlToDownload != null) && (stlToDownload != '')">
-  <a
-  mat-button
-  color="warning"
-  [href]="stlToDownload"
-  *ngIf="!isStlLoading; else noStlFound"
-  >
-  Downlaod Stl
-  </a>
-</ng-container>
-
-
-<ng-container *ngIf="isStlLoading">
-  <mat-spinner></mat-spinner>
-</ng-container>
-
-
+<footer class="my-5 pt-5 text-muted text-center text-small">
+  <p class="mb-1">&copy; 2017-2019 Company Name</p>
+  <ul class="list-inline">
+    <li class="list-inline-item"><a href="#">Privacy</a></li>
+    <li class="list-inline-item"><a href="#">Terms</a></li>
+    <li class="list-inline-item"><a href="#">Support</a></li>
+  </ul>
+</footer>

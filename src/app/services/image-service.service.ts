@@ -29,7 +29,7 @@ interface ImgResponse {
 export class ImageService {
   constructor(private http: HttpClient) {}
 
-  generateSCAD(name: string, address: string) {
+  generateSCAD(name: string, address: string, primaryColor: string, secondaryColor: string) {
     var qr = qrcode(0, "L");
     qr.addData(address);
     qr.make();
@@ -70,17 +70,21 @@ export class ImageService {
     
 
     return `
-    ${qr_data}
+    ${qr_data} 
 
-    union() {
-      translate([5,6,0]) color( "silver", 1.0 ) linear_extrude(height = 2)  text("${name}", font = "Kredit:style=Back", size = ${textSize});
+    difference() {
+      union() {
+        translate([5,6,0]) color(${secondaryColor}) linear_extrude(height = 2.2)  text("${name}", font = "Kredit:style=Back", size = ${textSize});
+  
+        translate([${translate_y}, ${translate_x}, 0]) color(${secondaryColor}) qr_render(qr_data);
+  
+        card();
+      }
 
-      translate([${translate_y}, ${translate_x}, 0]) color( "silver", 1.0 ) qr_render(qr_data);
-
-      card();
+      translate([26,35,.2]) color("black") cylinder(.2, 12.5, 12.5);
     }
 
-    module qr_render(data, module_size = 1.2, height = 2) {
+    module qr_render(data, module_size = 1.2, height = 2.2) {
       maxmod = len(data) - 1;
         union() {
         for(r = [0 : maxmod]) {
@@ -100,13 +104,17 @@ export class ImageService {
         union() {
             for(j = [1:28.5]) {
                 if(i > ${exclusion_x} && j > ${exclusion_y} || i < 4 && i > 1 && j < 40) {
-                    rand = rands(.4,1,1)[0];
-                    translate([j*3, i*3, 0]) color("black") cube([3, 3, rand]);
-                } else {
-                    rand = rands(.4,1.4,1)[0]; 
-                    translate([j*3, i*3, 0]) cube([3, 3, rand]);
+                    rand = rands(.6,1.2,1)[0];
+                    translate([j*3, i*3, 0]) color(${primaryColor}) cube([3, 3, rand]);
+                  } else {
+                    rand = rands(.6,1.6,1)[0]; 
+                    if(rand > 1.4) {
+                        translate([j*3, i*3, 0]) color(${primaryColor}) cube([3, 3, rand]);
+                        translate([j*3, i*3, 1.4]) color(${secondaryColor}) cube([3, 3, .2]);
+                    } else {                  
+                        translate([j*3, i*3, 0]) color(${primaryColor}) cube([3, 3, rand]);
+                    }
                 }
-
             }
         }
       }
