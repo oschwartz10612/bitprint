@@ -1,7 +1,11 @@
 import { Component } from '@angular/core';
 import { ImageService } from "../services/image-service.service";
 import { PaymentService } from "../services/payment-service.service";
+import { AuthService } from "../services/auth.service";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { ThrowStmt } from '@angular/compiler';
+import * as firebase from 'firebase/app';
 
 @Component({
   selector: 'app-root',
@@ -10,27 +14,78 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class GenerateComponent {
 
-  imageToShow: string = 'assets/img/default.png';
-  isImageLoading: boolean;
+  imageToShow: string;
+  isImageLoading: boolean = true;
   imgSize: number;
+
+  canCheckout: boolean;
 
   stlToDownload: string;
   isStlLoading: boolean;
 
-  constructor(private imageService: ImageService, private paymentService: PaymentService, private _formBuilder: FormBuilder) {}
+  uid: string;
+
+  productName: string = 'Bitcard';
+  productCost: number = 10;
+
+  constructor(private afs: AngularFirestore, private imageService: ImageService, private paymentService: PaymentService, private auth: AuthService) {}
 
   ngOnInit() {
+    this.auth.user$.subscribe((user) => {
+      console.log(user);
 
+
+      this.isImageLoading = false;
+      if (!user) {
+        this.imageToShow = 'test'
+      } else {
+        this.imageToShow = user.currentImg;
+        this.uid = user.uid;
+
+        if (user.cart.length > 0) {
+          this.canCheckout = true;
+        } else {
+          this.canCheckout = false;
+        }
+
+      }
+
+
+
+    })
   }
+
+  addToCart() {
+    this.afs.doc(`users/${this.uid}`).update({
+      cart: firebase.firestore.FieldValue.arrayUnion({
+        name: this.productName,
+        img: this.imageToShow,
+        cost: this.productCost,
+        id: this.genId()
+      }),
+      totalCost: firebase.firestore.FieldValue.increment(this.productCost)
+    });
+  }
+
+
 
   getImage(name: string, address: string) {
     var scad = this.imageService.generateSCAD(name, address, '[.25,.25,.25]', '[.9,.9,.9]');
     console.log(scad);
     
     this.isImageLoading = true;
-    this.imageService.getImage(scad, '2000,2000', "Nature").subscribe(data => {
+    this.imageService.getImage(scad, '2000,2000', "Nature").subscribe(async (data) => {
       console.log(data.url);
-      this.imageToShow = data.url;
+
+      var user = await this.auth.isLoggedIn();
+      if (!user) {
+        await this.auth.loginAnon();
+      }
+
+      await this.afs.doc(`users/${this.uid}`).update({
+        currentImg: data.url
+      });
+  
       this.isImageLoading = false;
     }, error => {
       this.isImageLoading = false;
@@ -52,4 +107,15 @@ export class GenerateComponent {
       console.log(error);
     });
   }
+
+  private genId(): string {
+    const isString = `${this.S4()}${this.S4()}-${this.S4()}-${this.S4()}-${this.S4()}-${this.S4()}${this.S4()}${this.S4()}`;
+
+    return isString;
+  }
+
+  private S4(): string {
+    return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+  }
+
 }

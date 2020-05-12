@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireFunctionsModule, ORIGIN } from '@angular/fire/functions';
+import { AngularFireAuthModule } from '@angular/fire/auth';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { environment } from '../environments/environment';
 import {MatInputModule} from '@angular/material/input';
@@ -36,6 +37,7 @@ import { HomeComponent } from './home/home.component';
     AngularFirestoreModule,
     AngularFireFunctionsModule,
     FormsModule,
+    AngularFireAuthModule,
     ReactiveFormsModule,
     MatInputModule,
     MatButtonModule,

@@ -137,7 +137,7 @@ export class ImageService {
       }),
     };
 
-    return this.http.post<ImgResponse>("/api/png", payload, httpOptions);
+    return this.http.post<ImgResponse>("http://openscadapi-getjzw4iqq-uc.a.run.app/api/png", payload, httpOptions);
   }
 
   getStl(
@@ -152,6 +152,6 @@ export class ImageService {
       }),
     };
 
-    return this.http.post<ImgResponse>("/api/stl", payload, httpOptions);
+    return this.http.post<ImgResponse>("http://openscadapi-getjzw4iqq-uc.a.run.app/api/stl", payload, httpOptions);
   }
 }

@@ -32,10 +32,17 @@
         color="primary"
         (click)="getImage(name.value, address.value)"
       >
-        Refresh Image
+        Generate Your Card
       </button>
 
-      <a  mat-raised-button color="primary" routerLink="/checkout">Buy Now</a>
+      <button
+      mat-raised-button
+      color="accent"
+      class="ml-4"
+      (click)="addToCart()"
+    >
+      Add To Cart
+    </button>
 
 
       <button
@@ -46,6 +53,16 @@
       >
         Generate Stl
       </button>
+
+      <a
+      mat-raised-button
+      color="accent"
+      class="ml-4"
+      routerLink="/checkout"
+      *ngIf="canCheckout"
+    >
+      Checkout
+    </a>
 
       <ng-container *ngIf="stlToDownload != null && stlToDownload != ''">
         <a
