@@ -56,3 +56,4 @@ Thumbs.db
 /functions/node_modules/
 
 /functions/.runtimeconfig.json
+functions/bitprint-9d203-firebase-adminsdk.json

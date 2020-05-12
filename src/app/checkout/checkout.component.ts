@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireFunctions } from '@angular/fire/functions';
 import * as firebase from 'firebase';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-checkout',
@@ -12,7 +14,18 @@ export class CheckoutComponent implements OnInit {
   uid: string;
   isLoading: boolean;
 
-  constructor(private auth: AuthService, private afs: AngularFirestore) { }
+  checkoutForm = new FormGroup({
+    firstName: new FormControl('', Validators.required),
+    lastName: new FormControl('', Validators.required),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    address: new FormControl('', Validators.required),
+    address2: new FormControl(''),
+    country: new FormControl('', Validators.required),
+    state: new FormControl('', Validators.required),
+    zip: new FormControl('', Validators.required)
+  });
+
+  constructor(private auth: AuthService, private afs: AngularFirestore, private fns: AngularFireFunctions) { }
 
   ngOnInit() {
     this.auth.user$.subscribe((user) => {
@@ -39,4 +52,10 @@ export class CheckoutComponent implements OnInit {
     });
   }
 
+  async onSubmit() {
+    console.log(this.checkoutForm.value)
+    const callable = this.fns.httpsCallable('createCharge');
+    var data = await callable({ form: this.checkoutForm.value }).toPromise();
+    window.open(data.uri, "_blank");
+  }
 }

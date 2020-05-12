@@ -46,7 +46,7 @@ import { HomeComponent } from './home/home.component';
     MatStepperModule,
     NgbModule.forRoot()
   ],
-  providers: [{ provide: ORIGIN, useValue: 'http://localhost:5005' }],
+  providers: [{ provide: ORIGIN, useValue: 'http://localhost:5001' }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -40,6 +40,7 @@
       color="accent"
       class="ml-4"
       (click)="addToCart()"
+      *ngIf="auth.user$ | async"
     >
       Add To Cart
     </button>
@@ -50,6 +51,7 @@
         color="accent"
         class="ml-4"
         (click)="getStl(name.value, address.value)"
+        *ngIf="auth.user$ | async"
       >
         Generate Stl
       </button>

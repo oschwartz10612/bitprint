@@ -4,18 +4,22 @@
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="d-block mx-auto"><circle cx="12" cy="12" r="10"></circle><line x1="14.31" y1="8" x2="20.05" y2="17.94"></line><line x1="9.69" y1="8" x2="21.17" y2="8"></line><line x1="7.38" y1="12" x2="13.12" y2="2.06"></line><line x1="9.69" y1="16" x2="3.95" y2="6.06"></line><line x1="14.31" y1="16" x2="2.83" y2="16"></line><line x1="16.62" y1="12" x2="10.88" y2="21.94"></line></svg>
     </a>
     <a class="py-2 d-none d-md-inline-block" routerLink="/generate">The Card</a>
-    <a class="py-2 d-none d-md-inline-block" href="#">About</a>
-    <a class="py-2 d-none d-md-inline-block" href="#">Support</a>
-    <a class="py-2 d-none d-md-inline-block" href="#">Checkout</a>
+    <a class="py-2 d-none d-md-inline-block" routerLink="/about">About</a>
+    <a class="py-2 d-none d-md-inline-block" routerLink="/support">Support</a>
+    
+    <ng-container *ngIf="auth.user$ | async as user">
+      <a class="py-2 d-none d-md-inline-block" routerLink="/checkout">Checkout <span class="badge badge-light">{{user.cart.length}}</span></a>
+    </ng-container>
+    
   </div>
 </nav>
 <router-outlet></router-outlet>
 
 <footer class="my-5 pt-5 text-muted text-center text-small">
-  <p class="mb-1">&copy; 2017-2019 Company Name</p>
+  <p class="mb-1">&copy; 2020 Bitprint</p>
   <ul class="list-inline">
-    <li class="list-inline-item"><a href="#">Privacy</a></li>
-    <li class="list-inline-item"><a href="#">Terms</a></li>
-    <li class="list-inline-item"><a href="#">Support</a></li>
+    <li class="list-inline-item"><a routerLink="/privacy">Privacy</a></li>
+    <li class="list-inline-item"><a routerLink="/terms">Terms</a></li>
+    <li class="list-inline-item"><a routerLink="/support">Support</a></li>
   </ul>
 </footer>

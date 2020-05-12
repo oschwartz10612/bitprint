@@ -28,6 +28,10 @@ export class GenerateComponent {
   productName: string = 'Bitcard';
   productCost: number = 10;
 
+  currentAddress: string;
+  currentCode: string;
+
+
   constructor(private afs: AngularFirestore, private imageService: ImageService, private paymentService: PaymentService, private auth: AuthService) {}
 
   ngOnInit() {
@@ -41,6 +45,8 @@ export class GenerateComponent {
       } else {
         this.imageToShow = user.currentImg;
         this.uid = user.uid;
+        this.currentAddress = user.currentAddress;
+        this.currentCode = user.currentCode;
 
         if (user.cart.length > 0) {
           this.canCheckout = true;
@@ -61,7 +67,9 @@ export class GenerateComponent {
         name: this.productName,
         img: this.imageToShow,
         cost: this.productCost,
-        id: this.genId()
+        id: this.genId(),
+        address: this.currentAddress,
+        code: this.currentCode
       }),
       totalCost: firebase.firestore.FieldValue.increment(this.productCost)
     });
@@ -83,7 +91,9 @@ export class GenerateComponent {
       }
 
       await this.afs.doc(`users/${this.uid}`).update({
-        currentImg: data.url
+        currentImg: data.url,
+        currentAddress: address,
+        currentCode: scad
       });
   
       this.isImageLoading = false;
