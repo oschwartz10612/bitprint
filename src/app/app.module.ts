@@ -11,15 +11,16 @@ import { AngularFireFunctionsModule, ORIGIN } from '@angular/fire/functions';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { environment } from '../environments/environment';
-import {MatInputModule} from '@angular/material/input';
-import {MatButtonModule} from '@angular/material/button';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {MatStepperModule} from '@angular/material/stepper';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { GenerateComponent } from './generate/generate.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { HomeComponent } from './home/home.component';
+import { TermsComponent } from './terms/terms.component';
+import { PrivacyComponent } from './privacy/privacy.component';
+import { SupportComponent } from './support/support.component';
+import { RefundComponent } from './refund/refund.component';
+import { AboutComponent } from './about/about.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,12 @@ import { HomeComponent } from './home/home.component';
     CheckoutComponent,
     GenerateComponent,
     NotFoundComponent,
-    HomeComponent
+    HomeComponent,
+    TermsComponent,
+    PrivacyComponent,
+    SupportComponent,
+    RefundComponent,
+    AboutComponent
   ],
   imports: [
     BrowserModule,
@@ -39,14 +45,10 @@ import { HomeComponent } from './home/home.component';
     FormsModule,
     AngularFireAuthModule,
     ReactiveFormsModule,
-    MatInputModule,
-    MatButtonModule,
     HttpClientModule,
-    MatProgressSpinnerModule,
-    MatStepperModule,
     NgbModule.forRoot()
   ],
-  providers: [{ provide: ORIGIN, useValue: 'http://localhost:5001' }],
+  providers: [{ provide: ORIGIN, useValue: 'https://us-central1-bitprint-9d203.cloudfunctions.net/createCharge' }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

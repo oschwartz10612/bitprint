@@ -1,6 +1,7 @@
-<div class="container-fluid mt-3">
+<div class="container mt-5">
   <div class="row">
-    <div class="col-md-6 text-center" [attr.height]="imgSize">
+    <div class="col-md-6" [attr.height]="imgSize">
+      <h3>Preview</h3>
       <img
         [src]="imageToShow"
         *ngIf="!isImageLoading; else noImageFound"
@@ -8,69 +9,142 @@
       />
 
       <ng-template #noImageFound>
-        <mat-spinner></mat-spinner>
+        <div
+          class="spinner-border"
+          style="width: 3rem; height: 3rem;"
+          role="status"
+        >
+          <span class="sr-only">Loading...</span>
+        </div>
       </ng-template>
 
       <br />
     </div>
-    <div class="col-md-6" >
-      <div class="picForm">
-        <mat-form-field class="formFullWidth">
-          <mat-label>Address</mat-label>
-          <input matInput #address />
-        </mat-form-field>
-        <br />
-        <mat-form-field class="formFullWidth">
-          <mat-label>Name</mat-label>
-          <input matInput #name />
-        </mat-form-field>
-      </div>
+    <div class="col-md-6 input">
+      <h3>The Bitprint Wallet Card</h3>
+      <p>by Bitprint</p>
+      <hr />
+      <h6>Price: <span class="text-success">$10.00</span></h6>
+      <p>Free shipping!</p>
 
-      <br />
+      <p class="mt-3">
+        A 3D printed cryptocurrency wallet card. Carry your cryto wallet in your
+        physical wallet! <a href="">Learn more</a> about the card below.
+      </p>
+      <hr />
+      <h4>Customize</h4>
+      <p>
+        Enter your wallet receive address to be encoded in the QR code and name
+        or aliais to be marked on the bottom. Click the "Generate" button to
+        preview your card.
+      </p>
+      <form class="picForm mt-3" [formGroup]="generateForm">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-default"
+              >QR Code</span
+            >
+          </div>
+          <input
+            type="text"
+            class="form-control"
+            aria-label="Sizing example input"
+            aria-describedby="inputGroup-sizing-default"
+            placeholder="BTC address or URL"
+            formControlName="address"
+            #address
+          />
+        </div>
+
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-default"
+              >Card Text</span
+            >
+          </div>
+          <input
+            type="text"
+            class="form-control"
+            aria-label="Sizing example input"
+            aria-describedby="inputGroup-sizing-default"
+            placeholder="Name or alias"
+            formControlName="name"
+            #name
+          />
+        </div>
+
+
+
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label for="country">Primary Color</label>
+            <select class="custom-select d-block w-100" id="primaryColor" #primaryColor formControlName="primaryColor" required>
+              <option value="White">White</option>
+              <option>Black</option>
+              <option>Purple</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="secondaryColor">Secondary Color</label>
+            <select class="custom-select d-block w-100" id="secondaryColor" #secondaryColor formControlName="secondaryColor" required>
+              <option value="Black">Black</option>
+              <option>White</option>
+              <option>Purple</option>
+            </select>
+          </div>
+        </div>
+      
+        <div class="alert alert-warning" role="alert" *ngIf="backroundWarning">
+          If the primary color is darker than the secondary color, some QR scanners may not pick up the QR code. Use at your own risk!
+        </div>
+
+        <div class="alert alert-danger" role="alert" *ngIf="conflictingColors">
+          You can not choose two of the same colors!
+        </div>
+
+      </form>
+
+      <hr />
       <button
-        mat-raised-button
-        color="primary"
-        (click)="getImage(name.value, address.value)"
+        class="btn btn-primary"
+        (click)="getImage()"
+        [disabled]="!generateForm.valid"
       >
         Generate Your Card
       </button>
 
-      <button
-      mat-raised-button
-      color="accent"
-      class="ml-4"
-      (click)="addToCart()"
-      *ngIf="auth.user$ | async"
-    >
-      Add To Cart
-    </button>
+      <ng-container *ngIf="auth.user$ | async as user">
+        <button
+          class="btn btn-secondary ml-3"
+          (click)="addToCart()"
+          *ngIf="
+            user.paymentStatus != 'charge:pending' &&
+            user.paymentStatus != 'charge:created'
+          "
+        >
+          Add To Cart
+        </button>
 
+        <a
+          class="btn btn-warning checkout"
+          routerLink="/checkout"
+          *ngIf="user.cart.length > 0"
+        >
+          Checkout
+        </a>
+      </ng-container>
 
       <button
-        mat-raised-button
-        color="accent"
-        class="ml-4"
+        class="btn btn-primary generate"
         (click)="getStl(name.value, address.value)"
-        *ngIf="auth.user$ | async"
+        *ngIf="(auth.user$ | async) && !isStlLoading"
       >
         Generate Stl
       </button>
 
-      <a
-      mat-raised-button
-      color="accent"
-      class="ml-4"
-      routerLink="/checkout"
-      *ngIf="canCheckout"
-    >
-      Checkout
-    </a>
-
       <ng-container *ngIf="stlToDownload != null && stlToDownload != ''">
         <a
-          mat-raised-button
-          color="warning"
-          class="ml-4"
+          class="btn btn-warning download"
           [href]="stlToDownload"
           *ngIf="!isStlLoading"
         >
@@ -79,8 +153,42 @@
       </ng-container>
 
       <ng-container *ngIf="isStlLoading">
-        <mat-spinner></mat-spinner>
+        <div
+          class="spinner-border ml-5 stlLoading"
+          style="width: 3rem; height: 3rem;"
+          role="status"
+        >
+          <span class="sr-only">Loading...</span>
+        </div>
       </ng-container>
     </div>
   </div>
+
+
+  <div class="row mt-5">
+
+    <div class="col-md-6 text-right">
+      <img src="/assets/img/example_top.png" alt="" width="500">
+    </div>
+
+    <div class="col-md-6 mr">
+      <h3>QR Code</h3>
+      <p>Some text here</p>
+    </div>
+
+  </div>
+
+  <div class="row mt-3">
+
+    <div class="col-md-6 text-right">
+      <img src="/assets/img/nfc.png" alt="" width="300">
+    </div>
+
+    <div class="col-md-6 mr">
+      <h3>NFC</h3>
+      <p>Some text here</p>
+    </div>
+
+  </div>
+
 </div>

@@ -39,7 +39,24 @@ export class AuthService {
       await this.afs.doc(`users/${user.uid}`).set({
         uid: user.uid,
         currentImg: '',
-        cart: []
+        cart: [],
+        shippingAddress: {
+          firstName: '',
+          lastName: '',
+          email: '',
+          address: '',
+          address2: '',
+          country: '',
+          state: '',
+          city: '',
+          zip: ''
+        },
+        generateForm: {
+          address: '',
+          name: '',
+          primaryColor: 'White',
+          secondaryColor: 'Black'
+        }
       });
       resolve();
     });

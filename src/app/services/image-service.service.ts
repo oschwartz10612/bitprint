@@ -81,7 +81,7 @@ export class ImageService {
         card();
       }
 
-      translate([26,35,.2]) color("black") cylinder(.2, 12.5, 12.5);
+      translate([26,35,.2]) color("black") cylinder(.2, 13.5, 13.5);
     }
 
     module qr_render(data, module_size = 1.2, height = 2.2) {
