@@ -16,7 +16,7 @@
                 <a [href]="item.img"><small class="text-muted">View Card</small></a>
               </div>
               <span class="text-muted">${{item.cost}}</span>
-              <button type="button" class="close" aria-label="Close" (click)="removeItem(item)" *ngIf="user.paymentStatus != 'charge:pending' && (auth.user$ | async)?.paymentStatus != 'charge:created'">
+              <button type="button" class="close" aria-label="Close" (click)="removeItem(item)" *ngIf="user.paymentStatus != 'pending' && (auth.user$ | async)?.paymentStatus != 'created'">
                 <span aria-hidden="true">&times;</span>
               </button>
             </li>
@@ -69,10 +69,8 @@
 
 
     <div class="col-md-8 order-md-1">
-      
 
-
-      <ng-container *ngIf="(auth.user$ | async)?.paymentStatus == 'charge:pending' || (auth.user$ | async)?.paymentStatus == 'charge:created'; else noPayment">
+      <ng-container *ngIf="(auth.user$ | async)?.paymentStatus == 'pending' || (auth.user$ | async)?.paymentStatus == 'created'; else noPayment">
         <div class="card">
           <div class="card-body">
             <h4 class="card-title">Your payment is pending...</h4>
@@ -226,12 +224,12 @@
     
             <div class="d-block my-3">
               <div class="custom-control custom-radio">
-                <input id="crypto" name="paymentMethod" type="radio" class="custom-control-input" checked required>
-                <label class="custom-control-label" for="crypto">Crypto</label>
+                <input id="coinbase" type="radio" class="custom-control-input" value="coinbase" name="method" formControlName="method">
+                <label class="custom-control-label" for="coinbase">Crypto</label>
               </div>
               <div class="custom-control custom-radio">
-                <input id="paypal" name="paymentMethod" type="radio" class="custom-control-input" required disabled>
-                <label class="custom-control-label" for="paypal">PayPal</label>
+                <input id="stripe" type="radio" class="custom-control-input" value="stripe" name="method" formControlName="method">
+                <label class="custom-control-label" for="stripe">Credit card (Stripe)</label>
               </div>
             </div>
 
@@ -241,9 +239,6 @@
             <ng-template #btnDisabled>
               <button class="btn btn-primary btn-lg btn-block" type="submit" disabled>Continue to payment</button>
             </ng-template>
-            
-            
-
   
           </form>
         </ng-container>

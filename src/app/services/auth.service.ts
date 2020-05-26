@@ -49,7 +49,8 @@ export class AuthService {
           country: '',
           state: '',
           city: '',
-          zip: ''
+          zip: '',
+          method: 'coinbase'
         },
         generateForm: {
           address: '',

@@ -43,14 +43,10 @@ export class GenerateComponent {
     secondaryColor: new FormControl('Black', Validators.required)
   });
 
-
-
   constructor(private afs: AngularFirestore, private imageService: ImageService, private paymentService: PaymentService, private auth: AuthService, private elementRef: ElementRef) {}
 
   ngOnInit() {
     this.auth.user$.subscribe((user) => {
-      console.log(user);
-
 
       this.isImageLoading = false;
       if (!user) {
@@ -71,9 +67,6 @@ export class GenerateComponent {
           primaryColor: user.generateForm.primaryColor,
           secondaryColor: user.generateForm.secondaryColor
         });
-
-
-
       }
     })
   }
@@ -138,9 +131,6 @@ export class GenerateComponent {
       secondaryColorTotal = secondaryColorTotal + secondaryColorValues[i];
     }
 
-    console.log(primaryColorTotal);
-    console.log(secondaryColorTotal);
-
     if (primaryColorTotal == secondaryColorTotal) {
       this.conflictingColors = true;
     } else {
@@ -152,8 +142,6 @@ export class GenerateComponent {
     } else {
       this.backroundWarning = false;
     }
-
-    
 
     var scad = this.imageService.generateSCAD(name, address, JSON.stringify(primaryColorValues), JSON.stringify(secondaryColorValues));
     console.log(scad);

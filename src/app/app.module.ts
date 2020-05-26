@@ -21,6 +21,7 @@ import { PrivacyComponent } from './privacy/privacy.component';
 import { SupportComponent } from './support/support.component';
 import { RefundComponent } from './refund/refund.component';
 import { AboutComponent } from './about/about.component';
+import { SuccessComponent } from './success/success.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { AboutComponent } from './about/about.component';
     PrivacyComponent,
     SupportComponent,
     RefundComponent,
-    AboutComponent
+    AboutComponent,
+    SuccessComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +50,7 @@ import { AboutComponent } from './about/about.component';
     HttpClientModule,
     NgbModule.forRoot()
   ],
-  providers: [{ provide: ORIGIN, useValue: 'https://us-central1-bitprint-9d203.cloudfunctions.net/createCharge' }],
+  providers: [{ provide: ORIGIN, useValue: 'http://localhost:5001' }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -5,6 +5,8 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import * as firebase from 'firebase';
 import { FormGroup, FormControl, Validators } from '@angular/forms'; 
 
+declare var Stripe: any;
+
 @Component({
   selector: 'app-checkout',
   templateUrl: './checkout.component.html',
@@ -15,6 +17,7 @@ export class CheckoutComponent implements OnInit {
   isLoading: boolean = true;
   isChecked: boolean;
   doesAgree: boolean = false;
+  sku: string = 'price_HKmThqzVUHVkuI';
 
   checkoutForm = new FormGroup({
     firstName: new FormControl('', Validators.required),
@@ -25,14 +28,16 @@ export class CheckoutComponent implements OnInit {
     country: new FormControl('', Validators.required),
     state: new FormControl('', Validators.required),
     city: new FormControl('', Validators.required),
-    zip: new FormControl('', Validators.required)
+    zip: new FormControl('', Validators.required),
+    method: new FormControl('coinbase', Validators.required)
   });
 
   constructor(private auth: AuthService, private afs: AngularFirestore, private fns: AngularFireFunctions) { }
 
+  stripe = Stripe('pk_live_JI1vqWHmxn9VfDR5oMg6dV7H001albyXpx');
+
   ngOnInit() {
     this.auth.user$.subscribe((user) => {
-      console.log(user);
       if (user) {
         this.uid = user.uid;
 
@@ -45,7 +50,7 @@ export class CheckoutComponent implements OnInit {
           country: user.shippingAddress.country,
           state: user.shippingAddress.state,
           city: user.shippingAddress.city,
-          zip: user.shippingAddress.zip,
+          zip: user.shippingAddress.zip
         });
 
       } else {
@@ -75,9 +80,27 @@ export class CheckoutComponent implements OnInit {
   async onSubmit() {
     console.log(this.checkoutForm.value)
     this.isLoading = true;
-    const callable = this.fns.httpsCallable('createCharge');
-    var data = await callable({ form: this.checkoutForm.value }).toPromise();
-    window.open(data.uri, "_blank");
+
+    if (this.checkoutForm.value.method == 'coinbase') {
+      const callable = this.fns.httpsCallable('createCharge');
+      var data = await callable({ form: this.checkoutForm.value }).toPromise();
+      window.open(data.uri, "_blank");
+    } 
+
+    if (this.checkoutForm.value.method == 'stripe') {
+
+      const callable = this.fns.httpsCallable('stripeCreateCheckout');
+      var data = await callable({ form: this.checkoutForm.value }).toPromise();
+      
+      const {error} = await this.stripe.redirectToCheckout({
+        sessionId: data.sessionId
+      })
+
+      if (error) {
+        alert('There was an error creating the payment. Please contact support.');
+      }
+    }
+
     this.isLoading = false;
   }
 }
