@@ -29,13 +29,13 @@
 
       <p class="mt-3">
         A 3D printed personal business card. Web presence in your
-        physical wallet! <a href="">Learn more</a> about the card below.
+        physical wallet! Learn more about the card below.
       </p>
       <hr />
       <h4>Customize</h4>
       <p>
         Enter your web receive address to be encoded in the QR code and NFC tag and name
-        or aliais to be marked on the bottom. Click the "Generate" button to
+        or alias to be marked on the bottom. Click the "Generate" button to
         preview your card.
       </p>
       <form class="picForm mt-3" [formGroup]="generateForm">
@@ -94,7 +94,7 @@
           </div>
         </div>
       
-        <div class="alert alert-warning" role="alert" *ngIf="backroundWarning">
+        <div class="alert alert-warning" role="alert" *ngIf="backgroundWarning">
           If the primary color is darker than the secondary color, some QR scanners may not pick up the QR code. Use at your own risk!
         </div>
 
@@ -148,7 +148,7 @@
           [href]="stlToDownload"
           *ngIf="!isStlLoading"
         >
-          Downlaod Stl
+          Download Stl
         </a>
       </ng-container>
 
@@ -164,16 +164,20 @@
     </div>
   </div>
 
+  <h2> <a id="description">About the card</a></h2>
+  This product is 3D printed in our facility using PLA filament and a .4 nozzle. See the features below.
+  <hr>
 
   <div class="row mt-5">
 
     <div class="col-md-6 text-right">
-      <img src="/assets/img/example_top.png" alt="" width="500">
+      <img src="/assets/img/example_top.png" alt="" class="description_image">
     </div>
 
     <div class="col-md-6 mr">
-      <h3>QR Code</h3>
-      <p>Some text here</p>
+      <h3>QR Code and Name</h3>
+      <p>Your name or alias will be printed at the bottom of the card along with a raised QR code. Scanning the QR code will bring the user to your address.</p>
+      <p>Same dimensions as a standard credit card.</p>
     </div>
 
   </div>
@@ -181,12 +185,12 @@
   <div class="row mt-3">
 
     <div class="col-md-6 text-right">
-      <img src="/assets/img/nfc.png" alt="" width="300">
+      <img src="/assets/img/nfc.png" alt="" width="200px">
     </div>
 
     <div class="col-md-6 mr">
       <h3>NFC</h3>
-      <p>Some text here</p>
+      <p>Your card will be 3D printed in the two colors chosen. Embedded in the print is a standard NFC tag. We will preload your address onto it, but it can be easily written to with a standard NFC capable phone. Users can tap your card to instantly bring up your address.</p>
     </div>
 
   </div>

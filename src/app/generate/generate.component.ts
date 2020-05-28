@@ -33,7 +33,7 @@ export class GenerateComponent {
   primaryColor: string;
   secondaryColor: string;
 
-  backroundWarning: boolean = false;
+  backgroundWarning: boolean = false;
   conflictingColors: boolean = false;
 
   generateForm = new FormGroup({
@@ -138,9 +138,9 @@ export class GenerateComponent {
     } 
     
     if (primaryColorTotal < secondaryColorTotal) {
-      this.backroundWarning = true;
+      this.backgroundWarning = true;
     } else {
-      this.backroundWarning = false;
+      this.backgroundWarning = false;
     }
 
     var scad = this.imageService.generateSCAD(name, address, JSON.stringify(primaryColorValues), JSON.stringify(secondaryColorValues));
