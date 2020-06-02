@@ -43,7 +43,7 @@ export class GenerateComponent {
     secondaryColor: new FormControl('Black', Validators.required)
   });
 
-  constructor(private afs: AngularFirestore, private imageService: ImageService, private paymentService: PaymentService, private auth: AuthService, private elementRef: ElementRef) {}
+  constructor(private afs: AngularFirestore, private imageService: ImageService, private paymentService: PaymentService, public auth: AuthService, private elementRef: ElementRef) {}
 
   ngOnInit() {
     this.auth.user$.subscribe((user) => {

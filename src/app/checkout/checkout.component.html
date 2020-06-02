@@ -338,19 +338,36 @@
               </div>
             </div>
 
-            <ng-container
-              *ngIf="checkoutForm.valid && doesAgree; else btnDisabled"
-            >
-              <button class="btn btn-primary btn-lg btn-block" type="submit">
-                Continue to payment
-              </button>
+            <ng-container *ngIf="!isPaymentLoading; else paymentNotLoading">
+              <ng-container
+                *ngIf="checkoutForm.valid && doesAgree; else btnDisabled"
+              >
+                <button class="btn btn-primary btn-lg btn-block" type="submit">
+                  Continue to payment
+                </button>
+              </ng-container>
+              <ng-template #btnDisabled>
+                <button
+                  class="btn btn-primary btn-lg btn-block"
+                  type="submit"
+                  disabled
+                >
+                  Continue to payment
+                </button>
+              </ng-template>
             </ng-container>
-            <ng-template #btnDisabled>
+
+            <ng-template #paymentNotLoading>
               <button
                 class="btn btn-primary btn-lg btn-block"
-                type="submit"
+                type="button"
                 disabled
               >
+                <span
+                  class="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
                 Continue to payment
               </button>
             </ng-template>

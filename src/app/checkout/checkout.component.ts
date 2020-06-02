@@ -12,13 +12,13 @@ declare var Stripe: any;
   templateUrl: './checkout.component.html',
   styleUrls: ['./checkout.component.css']
 })
+
 export class CheckoutComponent implements OnInit {
   uid: string;
   isLoading: boolean = true;
   isChecked: boolean;
   doesAgree: boolean = false;
   sku: string = 'price_HKmThqzVUHVkuI';
-
   checkoutForm = new FormGroup({
     firstName: new FormControl('', Validators.required),
     lastName: new FormControl('', Validators.required),
@@ -31,8 +31,9 @@ export class CheckoutComponent implements OnInit {
     zip: new FormControl('', Validators.required),
     method: new FormControl('coinbase', Validators.required)
   });
+  isPaymentLoading: boolean;
 
-  constructor(private auth: AuthService, private afs: AngularFirestore, private fns: AngularFireFunctions) { }
+  constructor(public auth: AuthService, private afs: AngularFirestore, private fns: AngularFireFunctions) { }
 
   stripe = Stripe('pk_live_JI1vqWHmxn9VfDR5oMg6dV7H001albyXpx');
 
@@ -78,8 +79,7 @@ export class CheckoutComponent implements OnInit {
   }
 
   async onSubmit() {
-    console.log(this.checkoutForm.value)
-    this.isLoading = true;
+    this.isPaymentLoading = true;
 
     if (this.checkoutForm.value.method == 'coinbase') {
       const callable = this.fns.httpsCallable('createCharge');
@@ -101,6 +101,6 @@ export class CheckoutComponent implements OnInit {
       }
     }
 
-    this.isLoading = false;
+    this.isPaymentLoading = false;
   }
 }

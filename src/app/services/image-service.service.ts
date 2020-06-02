@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpParams, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import * as qrcode from "qrcode-generator";
+import { isDevMode } from '@angular/core';
 
 export type ColorSchemes =
   | "Cornfield"
@@ -27,6 +28,7 @@ interface ImgResponse {
   providedIn: "root",
 })
 export class ImageService {
+  
   constructor(private http: HttpClient) {}
 
   generateSCAD(name: string, address: string, primaryColor: string, secondaryColor: string) {
@@ -137,7 +139,7 @@ export class ImageService {
       }),
     };
 
-    return this.http.post<ImgResponse>("http://openscadapi-getjzw4iqq-uc.a.run.app/api/png", payload, httpOptions);
+    return this.http.post<ImgResponse>("https://openscadapi-getjzw4iqq-uc.a.run.app/api/png", payload, httpOptions);
   }
 
   getStl(
@@ -152,6 +154,6 @@ export class ImageService {
       }),
     };
 
-    return this.http.post<ImgResponse>("http://openscadapi-getjzw4iqq-uc.a.run.app/api/stl", payload, httpOptions);
+    return this.http.post<ImgResponse>("https://openscadapi-getjzw4iqq-uc.a.run.app/api/png", payload, httpOptions);
   }
 }

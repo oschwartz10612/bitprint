@@ -11,7 +11,6 @@ import { AngularFireFunctionsModule, ORIGIN } from '@angular/fire/functions';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { environment } from '../environments/environment';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { GenerateComponent } from './generate/generate.component';
 import { NotFoundComponent } from './not-found/not-found.component';
@@ -48,9 +47,8 @@ import { SuccessComponent } from './success/success.component';
     AngularFireAuthModule,
     ReactiveFormsModule,
     HttpClientModule,
-    NgbModule.forRoot()
   ],
-  providers: [{ provide: ORIGIN, useValue: 'http://localhost:5001' }],
+  providers: [{ provide: ORIGIN, useValue: 'https://bitprint.io' }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
