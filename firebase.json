@@ -8,19 +8,19 @@
     ],
     "rewrites": [
       {
-        "source": "/bitprint-9d203/us-central1/stripeCreateCheckout",
+        "source": "/bitprint-store/us-central1/stripeCreateCheckout",
         "function": "stripeCreateCheckout"
       },
       {
-        "source": "/bitprint-9d203/us-central1/createCharge",
+        "source": "/bitprint-store/us-central1/createCharge",
         "function": "createCharge"
       },
       {
-        "source": "/bitprint-9d203/us-central1/stripeWebhook",
+        "source": "/bitprint-store/us-central1/stripeWebhook",
         "function": "stripeWebhook"
       },
       {
-        "source": "/bitprint-9d203/us-central1/coinbaseWebhook",
+        "source": "/bitprint-store/us-central1/coinbaseWebhook",
         "function": "coinbaseWebhook"
       },
       {

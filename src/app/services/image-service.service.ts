@@ -139,7 +139,7 @@ export class ImageService {
       }),
     };
 
-    return this.http.post<ImgResponse>("https://openscadapi-getjzw4iqq-uc.a.run.app/api/png", payload, httpOptions);
+    return this.http.post<ImgResponse>("https://api.bitprint.io", payload, httpOptions);
   }
 
   getStl(
@@ -154,6 +154,6 @@ export class ImageService {
       }),
     };
 
-    return this.http.post<ImgResponse>("https://openscadapi-getjzw4iqq-uc.a.run.app/api/png", payload, httpOptions);
+    return this.http.post<ImgResponse>("https://api.bitprint.io", payload, httpOptions);
   }
 }
