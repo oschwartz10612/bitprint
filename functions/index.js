@@ -1,10 +1,7 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
-var serviceAccount = require("./bitprint-9d203-firebase-adminsdk.json");
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://bitprint-9d203.firebaseio.com",
-});
+
+admin.initializeApp();
 
 const sgMail = require('@sendgrid/mail');
 const API_KEY = functions.config().sendgrid.key;
