@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "bitprint/dist/bitprint",
+    "public": "dist/bitprint",
     "ignore": [
       "firebase.json",
       "**/.*",
