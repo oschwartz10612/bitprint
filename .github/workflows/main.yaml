@@ -18,8 +18,6 @@ jobs:
         uses: actions/checkout@master
       - name: Install Dependencies
         run: npm install
-      - name: Install Functions Dependencies
-        run: npm --prefix ./functions install ./functions
       - name: Build
         run: npm run build:prod
       - name: Archive Production Artifact
@@ -39,6 +37,8 @@ jobs:
         with:
           name: dist
           path: dist
+      - name: Install Functions Dependencies
+        run: npm --prefix ./functions install ./functions
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
