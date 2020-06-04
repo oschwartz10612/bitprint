@@ -11,15 +11,17 @@ on:
 
 jobs:
   build:
-    name: Build Angular
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master
       - name: Install Dependencies
         run: npm install
+      - name: Install Functions Dependencies
+        run: npm --prefix ./functions install ./functions
       - name: Build
-        run: npm run build-prod
+        run: npm run build:prod
       - name: Archive Production Artifact
         uses: actions/upload-artifact@master
         with:
@@ -37,8 +39,6 @@ jobs:
         with:
           name: dist
           path: dist
-      - name: Install Functions Dependencies
-        run: npm --prefix ./functions install ./functions
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
