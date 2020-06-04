@@ -1,0 +1,32 @@
+{
+  "hosting": {
+    "public": "bitprint/dist/bitprint",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/bitprint-9d203/us-central1/stripeCreateCheckout",
+        "function": "stripeCreateCheckout"
+      },
+      {
+        "source": "/bitprint-9d203/us-central1/createCharge",
+        "function": "createCharge"
+      },
+      {
+        "source": "/bitprint-9d203/us-central1/stripeWebhook",
+        "function": "stripeWebhook"
+      },
+      {
+        "source": "/bitprint-9d203/us-central1/coinbaseWebhook",
+        "function": "coinbaseWebhook"
+      },
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

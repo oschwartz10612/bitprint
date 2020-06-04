@@ -111,7 +111,7 @@ export class ImageService {
                   } else {
                     rand = rands(.6,1.6,1)[0]; 
                     if(rand > 1.4) {
-                        translate([j*3, i*3, 0]) color(${primaryColor}) cube([3, 3, rand]);
+                        translate([j*3, i*3, 0]) color(${primaryColor}) cube([3, 3, 1.4]);
                         translate([j*3, i*3, 1.4]) color(${secondaryColor}) cube([3, 3, .2]);
                     } else {                  
                         translate([j*3, i*3, 0]) color(${primaryColor}) cube([3, 3, rand]);
