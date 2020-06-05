@@ -154,6 +154,6 @@ export class ImageService {
       }),
     };
 
-    return this.http.post<ImgResponse>("https://api.bitprint.io/api/png", payload, httpOptions);
+    return this.http.post<ImgResponse>("https://api.bitprint.io/api/stl", payload, httpOptions);
   }
 }
