@@ -1,5 +1,7 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
+const fetch = require('node-fetch');
+const { URLSearchParams } = require('url');
 admin.initializeApp();
 
 const sgMail = require('@sendgrid/mail');
@@ -17,6 +19,11 @@ Client.init(functions.config().coinbase.key);
 const Stripe = require('stripe');
 const stripe = new Stripe(functions.config().stripe.key);
 const webhookSecret = functions.config().stripe.websec;
+
+
+if (process.env.NODE_ENV === 'development') {
+  firebase.functions().useFunctionsEmulator('http://localhost:8080');
+}
 
 exports.createCharge = functions.https.onCall(async (data, context) => {
   var form = data.form;
@@ -292,6 +299,64 @@ exports.stripeWebhook = functions.https.onRequest(async (request, response) => {
 
   response.json({received: true});
 });
+
+const runtimeOpts = {
+  timeoutSeconds: 300
+}
+
+exports.buildOrders = functions
+    .runWith(runtimeOpts)
+    .firestore
+    .document('orders/{orderId}')
+    .onUpdate(async (snap, context) => {
+
+      const orderId = context.params.orderId;
+      const order = snap.after.data();
+      var fetchPromises = [];
+      var counter = 0;
+      const results = [];
+
+      for (let i = 0; i < order.order.length; i++) {
+    
+        if (counter == 2) {
+          results.push(await Promise.all(fetchPromises));
+          fetchPromises = [];
+          counter = 0;
+        } 
+
+        const item = order.order[i];
+        const params = new URLSearchParams();
+        params.append('code', item.code);
+        fetchPromises.push(fetch('http://localhost:8090/api/stl', { method: 'POST', body: params }));
+        counter++;
+        console.log('Making request');
+      }
+
+      //results = [[data,data,data,data],[data,data]]
+      if (fetchPromises.length > 0) {
+        results.push(await Promise.all(fetchPromises));
+      }
+
+      var stlUrls = [];
+      for (let i = 0; i < results.length; i++) {
+        for (let j = 0; j < results[i].length; j++) {
+          const data = await results[i][j].json();
+          stlUrls.push(data.url);
+        }
+      }
+
+      console.log(stlUrls);
+      
+      // admin
+      // .firestore()
+      // .doc(`orders/${orderId}`)
+      // .update({
+      //   paymentEndpoint: {
+      //     receiptUri: event.data.object.charges.data[0].receipt_url
+      //   }
+      // });
+      
+    });
 
 function getDate() {
   let date_ob = new Date();
