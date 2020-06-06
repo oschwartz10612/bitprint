@@ -327,6 +327,7 @@ exports.buildOrders = functions
         const item = order.order[i];
         const params = new URLSearchParams();
         params.append('code', item.code);
+        params.append('filename', item.id);
         fetchPromises.push(fetch('http://localhost:8090/api/stl', { method: 'POST', body: params }));
         counter++;
         console.log('Making request');
@@ -341,7 +342,7 @@ exports.buildOrders = functions
       for (let i = 0; i < results.length; i++) {
         for (let j = 0; j < results[i].length; j++) {
           const data = await results[i][j].json();
-          stlUrls.push(data.url);
+          stlUrls.push({url: data.url, id: data.id});
         }
       }
 
