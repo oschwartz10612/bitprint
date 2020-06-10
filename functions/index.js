@@ -1,10 +1,15 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
+const fetch = require('node-fetch');
+const { URLSearchParams } = require('url');
 admin.initializeApp();
 
 const sgMail = require('@sendgrid/mail');
 const API_KEY = functions.config().sendgrid.key;
 const TEMPLATE_ID = functions.config().sendgrid.template;
+const notifyEmail = functions.config().sendgrid.notifyemail;
+const notifyEmailTemplate = functions.config().sendgrid.notifyemailtemplate;
+
 sgMail.setApiKey(API_KEY);
 
 var coinbase = require("coinbase-commerce-node");
@@ -17,6 +22,10 @@ Client.init(functions.config().coinbase.key);
 const Stripe = require('stripe');
 const stripe = new Stripe(functions.config().stripe.key);
 const webhookSecret = functions.config().stripe.websec;
+
+if (process.env.NODE_ENV === 'development') {
+  firebase.functions().useFunctionsEmulator('http://localhost:8080');
+}
 
 exports.createCharge = functions.https.onCall(async (data, context) => {
   var form = data.form;
@@ -292,6 +301,87 @@ exports.stripeWebhook = functions.https.onRequest(async (request, response) => {
 
   response.json({received: true});
 });
+
+const runtimeOpts = {
+  timeoutSeconds: 300
+}
+
+exports.buildOrders = functions
+    .runWith(runtimeOpts)
+    .firestore
+    .document('orders/{orderId}')
+    .onCreate(async (snap, context) => {
+
+      const orderId = context.params.orderId;
+      var order = snap.data();
+      var fetchPromises = [];
+      var counter = 0;
+      var results = [];      
+
+      for (let i = 0; i < order.order.length; i++) {
+    
+        if (counter == 3) {
+          results.push(await Promise.all(fetchPromises));
+          fetchPromises = [];
+          counter = 0;
+        } 
+
+        const item = order.order[i];
+        const params = new URLSearchParams();
+        params.append('code', item.code);
+        params.append('filename', item.id);
+        fetchPromises.push(fetch('http://localhost:5000/api/stl', { method: 'POST', body: params }));
+        counter++;
+        console.log('Making request');
+      }
+
+      if (fetchPromises.length > 0) {
+        results.push(await Promise.all(fetchPromises));
+      }
+
+      var stlUrls = [];
+      for (let i = 0; i < results.length; i++) {
+        for (let j = 0; j < results[i].length; j++) {
+          const data = await results[i][j].json();
+          stlUrls.push({url: data.url, id: data.id});
+        }
+      }
+
+      for (let i = 0; i < order.order.length; i++) {
+        const item = order.order[i];
+        stlUrls.forEach(stl => {
+          if (stl.id = item.id) {
+            order.order[i].stl = stl.url;
+          }
+        });
+      }
+      
+      await admin
+      .firestore()
+      .doc(`orders/${orderId}`)
+      .update({
+        order: order.order
+      });
+
+      const msg = {
+        to: notifyEmail,
+        from: {
+          email: 'orders@bitprint.io',
+          name: 'Bitprint Orders'
+        },
+        reply_to: {
+          email: 'support@bitprint.io',
+          name: 'Bitprint Support'
+        },
+        templateId: notifyEmailTemplate,
+        dynamic_template_data: {
+          items: stlUrls,
+        }
+      }
+    
+      await sgMail.send(msg);
+      
+    });
 
 function getDate() {
   let date_ob = new Date();
