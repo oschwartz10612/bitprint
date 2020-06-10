@@ -92,19 +92,22 @@ exports.coinbaseWebhook = functions.https.onRequest(async (request, response) =>
   
   var users = await admin.firestore().collection("users").where("paymentEndpoint.id", "==", id).get();
 
-  var counter = 0;
+  var userFound = false;
+  var user;
   users.forEach((doc) => {
-    user = doc.data();
-    counter++;
+    ref = doc.data();
+    if (ref.paymentEndpoint.id == 'id') {
+      user = ref;
+      userFound = true;
+    } else {
+      console.log("Incorrect user");
+    }
   });
 
-  if (counter == 0) {
+  if (!userFound) {
     console.warn('User not found');
     return response.status(500).send('Could not find user' + event.id);
-  } else if(counter > 1) {
-    console.warn('Too many users found');
-    return response.status(500).send('Too many users found' + event.id);
-  }
+  } 
 
   if (type == 'confirmed') {
 
@@ -254,19 +257,23 @@ exports.stripeWebhook = functions.https.onRequest(async (request, response) => {
 
     var users = await admin.firestore().collection("users").where("paymentEndpoint.id", "==", id).get();
   
-    var counter = 0;
+    var userFound = false;
+    var user;
     users.forEach((doc) => {
-      user = doc.data();
-      counter++;
+      ref = doc.data();
+      if (ref.paymentEndpoint.id == 'id') {
+        user = ref;
+        userFound = true;
+      } else {
+        console.log("Incorrect user");
+      }
     });
-
-    if (counter == 0) {
+  
+    if (!userFound) {
       console.warn('User not found');
-      return response.status(500).send('Could not find user');
-    } else if(counter > 1) {
-      console.warn('Too many users found');
-      return response.status(500).send('Too many users found');
-    }
+      return response.status(500).send('Could not find user' + event.id);
+    } 
+  
 
     const msg = {
       to: user.shippingAddress.email,
