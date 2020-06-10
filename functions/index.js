@@ -330,7 +330,7 @@ exports.buildOrders = functions
         const params = new URLSearchParams();
         params.append('code', item.code);
         params.append('filename', item.id);
-        fetchPromises.push(fetch('http://localhost:5000/api/stl', { method: 'POST', body: params }));
+        fetchPromises.push(fetch('https://api.bitprint.io/api/stl', { method: 'POST', body: params }));
         counter++;
         console.log('Making request');
       }
