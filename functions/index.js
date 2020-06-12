@@ -383,7 +383,7 @@ exports.buildOrders = functions
       },
       templateId: notifyEmailTemplate,
       dynamic_template_data: {
-        items: stlUrls,
+        order: order.order,
       },
     };
 
