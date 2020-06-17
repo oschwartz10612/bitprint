@@ -1,1 +1,3 @@
-# bitprint-functions
+# Bitprint Firebase Function
+
+In development...
