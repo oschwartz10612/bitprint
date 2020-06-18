@@ -34,7 +34,8 @@ import { SuccessComponent } from './success/success.component';
     SupportComponent,
     RefundComponent,
     AboutComponent,
-    SuccessComponent
+    SuccessComponent,
+    InsertComponent
   ],
   imports: [
     BrowserModule,

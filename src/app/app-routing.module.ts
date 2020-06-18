@@ -10,6 +10,7 @@ import { PrivacyComponent } from './privacy/privacy.component';
 import { SupportComponent } from './support/support.component';
 import { RefundComponent } from './refund/refund.component';
 import { AboutComponent } from './about/about.component';
+import { SuccessComponent } from './success/success.component';
 
 const routes: Routes = [
   { path: 'generate', component: GenerateComponent },
@@ -20,6 +21,7 @@ const routes: Routes = [
   { path: 'support', component: SupportComponent },
   { path: 'refund', component: RefundComponent },
   { path: 'about', component: AboutComponent },
+  { path: 'success', component: SuccessComponent },
   { path: '', component: HomeComponent },
   { path: '**', component: NotFoundComponent }
 ];
