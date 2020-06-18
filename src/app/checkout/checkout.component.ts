@@ -29,7 +29,7 @@ export class CheckoutComponent implements OnInit {
     state: new FormControl('', Validators.required),
     city: new FormControl('', Validators.required),
     zip: new FormControl('', Validators.required),
-    method: new FormControl('coinbase', Validators.required)
+    method: new FormControl('stripe', Validators.required)
   });
   isPaymentLoading: boolean;
 

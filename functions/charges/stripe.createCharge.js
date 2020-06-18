@@ -8,7 +8,7 @@ const stripe = new Stripe(functions.config().stripe.key);
 const stripeCreateCharge = async (data, context) => {
   var form = data.form;
 
-  var user = await admin.firestore().doc(`users/${context.auth.uid}`).get();
+  var user = await db.doc(`users/${context.auth.uid}`).get();
   if (!user.exists) {
     functions.https.HttpsError(
       "failed-precondition",
