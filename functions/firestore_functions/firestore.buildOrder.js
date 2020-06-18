@@ -37,7 +37,7 @@ const buildOrders = async (snap, context) => {
     params.append("code", item.code);
     params.append("filename", item.id);
     fetchPromises.push(
-      fetch("http://localhost:5000/api/stl", {
+      fetch("https://api.bitprint.io/api/stl", {
         method: "POST",
         body: params,
       })
