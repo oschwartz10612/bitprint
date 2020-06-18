@@ -1,5 +1,5 @@
 const { db } = require("../admin");
-const functions = require('firebase-functions');
+const functions = require("firebase-functions");
 
 const DateFormatter = require("./date_formatter");
 
@@ -28,10 +28,7 @@ const stripeWebhook = async (request, response) => {
   console.log(event.type);
   if (event.type == "checkout.session.completed") {
     const user = (
-      await admin
-        .firestore()
-        .doc(`users/${event.data.object.client_reference_id}`)
-        .get()
+      await db.doc(`users/${event.data.object.client_reference_id}`).get()
     ).data();
 
     db.doc(`orders/${event.data.object.payment_intent}`).set({
@@ -54,8 +51,7 @@ const stripeWebhook = async (request, response) => {
   } else if (event.type == "payment_intent.succeeded") {
     const id = event.data.object.charges.data[0].payment_intent;
 
-    var users = await admin
-      .firestore()
+    var users = await db
       .collection("users")
       .where("paymentEndpoint.id", "==", id)
       .get();
@@ -80,14 +76,11 @@ const stripeWebhook = async (request, response) => {
       return response.status(500).send("Could not find user" + event.id);
     }
 
-    admin
-      .firestore()
-      .doc(`users/${user.uid}`)
-      .update({
-        paymentEndpoint: {
-          receiptUri: event.data.object.charges.data[0].receipt_url,
-        },
-      });
+    db.doc(`users/${user.uid}`).update({
+      paymentEndpoint: {
+        receiptUri: event.data.object.charges.data[0].receipt_url,
+      },
+    });
 
     const msg = {
       to: user.shippingAddress.email,
@@ -111,6 +104,6 @@ const stripeWebhook = async (request, response) => {
   }
 
   response.json({ received: true });
-}
+};
 
 module.exports = stripeWebhook;

@@ -1,5 +1,5 @@
 const { db } = require("../admin");
-const functions = require('firebase-functions');
+const functions = require("firebase-functions");
 
 var coinbase = require("coinbase-commerce-node");
 var Client = coinbase.Client;
@@ -33,20 +33,17 @@ const coinbaseCreateCharge = async (data, context) => {
     throw new functions.https.HttpsError("failed-precondition", err);
   });
 
-  admin
-    .firestore()
-    .doc(`users/${context.auth.uid}`)
-    .update({
-      shippingAddress: form,
-      paymentEndpoint: {
-        uri: response.hosted_url,
-        id: response.id,
-        code: response.code,
-      },
-      paymentStatus: "created",
-    });
+  db.doc(`users/${context.auth.uid}`).update({
+    shippingAddress: form,
+    paymentEndpoint: {
+      uri: response.hosted_url,
+      id: response.id,
+      code: response.code,
+    },
+    paymentStatus: "created",
+  });
 
   return { uri: response.hosted_url };
-}
+};
 
 module.exports = coinbaseCreateCharge;

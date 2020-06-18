@@ -20,7 +20,7 @@ const bucket = storage.bucket(bucketName);
 
 const buildOrders = async (snap, context) => {
   const orderId = context.params.orderId;
-  var order = snap.after.data();
+  var order = snap.data();
   var fetchPromises = [];
   var counter = 0;
   var results = [];

@@ -1,5 +1,5 @@
 const { db } = require("../admin");
-const functions = require('firebase-functions');
+const functions = require("firebase-functions");
 
 const Stripe = require("stripe");
 const { Stream } = require("stream");
@@ -32,16 +32,13 @@ const stripeCreateCharge = async (data, context) => {
     cancel_url: "http://bitprint.io/checkout",
   });
 
-  admin
-    .firestore()
-    .doc(`users/${context.auth.uid}`)
-    .update({
-      shippingAddress: form,
-      paymentEndpoint: {
-        id: session.payment_intent,
-      },
-      paymentStatus: "created",
-    });
+  db.doc(`users/${context.auth.uid}`).update({
+    shippingAddress: form,
+    paymentEndpoint: {
+      id: session.payment_intent,
+    },
+    paymentStatus: "created",
+  });
 
   return { sessionId: session.id };
 };

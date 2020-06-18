@@ -16,7 +16,7 @@ const runtimeOpts = {
 
 exports.stripeWebhook = functions.https.onRequest(stripeWebhook);
 exports.coinbaseWebhook = functions.https.onRequest(coinbaseWebhook);
-exports.buildOrders = functions.runWith(runtimeOpts).firestore.document("orders/{orderId}").onUpdate(buildOrders);
+exports.buildOrders = functions.runWith(runtimeOpts).firestore.document("orders/{orderId}").onCreate(buildOrders);
 exports.stripeCreateCheckout = functions.https.onCall(stripeCreateCharge);
 exports.createCharge = functions.https.onCall(coinbaseCreateCharge);
 
