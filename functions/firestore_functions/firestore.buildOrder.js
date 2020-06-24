@@ -194,7 +194,7 @@ function genShippingURL(token, uid) {
 }
 
 function genId() {
-  const isString = `${this.S4()}${this.S4()}-${this.S4()}-${this.S4()}-${this.S4()}-${this.S4()}${this.S4()}${this.S4()}`;
+  const isString = `${S4()}${S4()}-${S4()}-${S4()}-${S4()}-${S4()}${S4()}${S4()}`;
   return isString;
 }
 
