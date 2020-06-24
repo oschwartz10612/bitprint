@@ -70,9 +70,12 @@ const buildOrders = async (snap, context) => {
   //Generate Insert
   const pdf = await buildPDF(order.shippingAddress, orderId);  
 
+  var token = genId();
+
   await db.doc(`orders/${orderId}`).update({
     order: order.order,
     insert: pdf,
+    token: token
   });
 
   const msg = {
@@ -89,6 +92,7 @@ const buildOrders = async (snap, context) => {
     dynamic_template_data: {
       order: order.order,
       pdfInsert: pdf,
+      shippingURL: genShippingURL(token, order.uid)
     },
   };
 
@@ -183,6 +187,19 @@ function createPublicFileURL(storageName) {
   return `https://storage.googleapis.com/${bucketName}/${encodeURIComponent(
     storageName
   )}`;
+}
+
+function genShippingURL(token, uid) {
+  return `https://us-central1-bitprint-store.cloudfunctions.net/shippingWebhook?uid=${uid}&token=${token}`
+}
+
+function genId() {
+  const isString = `${this.S4()}${this.S4()}-${this.S4()}-${this.S4()}-${this.S4()}-${this.S4()}${this.S4()}${this.S4()}`;
+  return isString;
+}
+
+function S4() {
+  return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
 }
 
 module.exports = buildOrders;

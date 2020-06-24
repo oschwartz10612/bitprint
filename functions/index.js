@@ -5,6 +5,7 @@ const stripeWebhook = require('./webhooks/stripe.webhook.js');
 const stripeCreateCharge = require('./charges/stripe.createCharge.js');
 const coinbaseCreateCharge = require('./charges/coinbase.createCharge.js');
 const buildOrders = require('./firestore_functions/firestore.buildOrder.js');
+const shippingWebhook = require('./webhooks/shipping.webhook.js');
 
 if (process.env.NODE_ENV === "development") {
   firebase.functions().useFunctionsEmulator("http://localhost:8080");
@@ -16,6 +17,7 @@ const runtimeOpts = {
 
 exports.stripeWebhook = functions.https.onRequest(stripeWebhook);
 exports.coinbaseWebhook = functions.https.onRequest(coinbaseWebhook);
+exports.shippingWebhook = functions.https.onRequest(shippingWebhook);
 exports.buildOrders = functions.runWith(runtimeOpts).firestore.document("orders/{orderId}").onCreate(buildOrders);
 exports.stripeCreateCheckout = functions.https.onCall(stripeCreateCharge);
 exports.createCharge = functions.https.onCall(coinbaseCreateCharge);
