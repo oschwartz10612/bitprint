@@ -35,6 +35,7 @@ export class GenerateComponent {
 
   backgroundWarning: boolean = false;
   conflictingColors: boolean = false;
+  price: string = 'price_HKlQAwsk8vOcbF'
 
   generateForm = new FormGroup({
     address: new FormControl('', Validators.required),
@@ -85,7 +86,8 @@ export class GenerateComponent {
         address: this.currentAddress,
         code: this.currentCode,
         primaryColor: this.primaryColor,
-        secondaryColor: this.secondaryColor
+        secondaryColor: this.secondaryColor,
+        price: this.price
       }),
       totalCost: firebase.firestore.FieldValue.increment(this.productCost)
     });

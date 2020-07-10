@@ -17,14 +17,25 @@ const stripeCreateCharge = async (data, context) => {
   }
   user = user.data();
 
+  let line_items = [];
+  user.cart.forEach(item => {
+
+    var price = item.price;
+    user.promos.forEach(promo => {
+      if (item.price == promo.oldPrice) {
+        price = promo.newPrice;
+      }
+    });
+
+    line_items.push({
+      price: price,
+      quantity: 1
+    })
+  });
+
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
-    line_items: [
-      {
-        price: "price_HKlQAwsk8vOcbF",
-        quantity: user.cart.length,
-      },
-    ],
+    line_items: line_items,
     client_reference_id: context.auth.uid,
     customer_email: form.email,
     mode: "payment",

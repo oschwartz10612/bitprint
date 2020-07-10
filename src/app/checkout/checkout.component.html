@@ -35,13 +35,30 @@
             </li>
           </ng-container>
 
-          <!-- <li class="list-group-item d-flex justify-content-between bg-light">
-          <div class="text-success">
-            <h6 class="my-0">Promo code</h6>
-            <small>EXAMPLECODE</small>
-          </div>
-          <span class="text-success">-$5</span>
-        </li> -->
+          <ng-container *ngFor="let promo of user.promos">
+            <li class="list-group-item d-flex justify-content-between bg-light">
+              <div class="text-success">
+                <h6 class="my-0">Promo code</h6>
+                <small>{{promo.code}}</small>
+              </div>
+              <span class="text-success">{{promo.displayDiscount}}</span>
+              <button
+              type="button"
+              class="close"
+              aria-label="Close"
+              (click)="removePromo(promo)"
+              *ngIf="
+                user.paymentStatus != 'pending' &&
+                (auth.user$ | async)?.paymentStatus != 'created'
+              "
+              >
+              <span aria-hidden="true">&times;</span>
+            </button>
+            </li>
+          </ng-container>
+          
+
+
 
           <li class="list-group-item d-flex justify-content-between">
             <span>Total (USD)</span>
@@ -49,14 +66,41 @@
           </li>
         </ul>
 
-        <form class="card p-2">
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="Promo code" />
-            <div class="input-group-append">
-              <button type="submit" class="btn btn-secondary">Redeem</button>
-            </div>
+        <div class="alert alert-danger mt-3" role="alert" *ngIf="noPromo">
+          That code does not exist.
+        </div>
+        <div class="alert alert-danger mt-3" role="alert" *ngIf="alreadyInstalled">
+          You have already added this code.
+        </div>
+        <div class="alert alert-success mt-3" role="alert" *ngIf="addedCode">
+          You successfully added a promo code.
+        </div>
+
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Promo code"
+            #promoCode
+          />
+          <div class="input-group-append">
+            <button
+              class="btn btn-secondary"
+              (click)="addPromo(promoCode.value)"
+            >
+              Redeem
+            </button>
           </div>
-        </form>
+        </div>
+
+        <div
+          class="alert alert-success mt-3"
+          role="alert"
+          *ngIf="user.cart.length > 2"
+        >
+          Use discount code <strong>BULKORDER</strong> to get a 10% discount on
+          each item.
+        </div>
       </ng-container>
 
       <ng-container *ngIf="isLoading">

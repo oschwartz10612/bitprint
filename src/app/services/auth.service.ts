@@ -40,6 +40,7 @@ export class AuthService {
         uid: user.uid,
         currentImg: '',
         cart: [],
+        promos: [],
         shippingAddress: {
           firstName: '',
           lastName: '',

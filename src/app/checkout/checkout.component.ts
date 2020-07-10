@@ -19,6 +19,7 @@ export class CheckoutComponent implements OnInit {
   isChecked: boolean;
   doesAgree: boolean = false;
   sku: string = 'price_HKmThqzVUHVkuI';
+  noPromo: boolean = false;
   checkoutForm = new FormGroup({
     firstName: new FormControl('', Validators.required),
     lastName: new FormControl('', Validators.required),
@@ -32,6 +33,10 @@ export class CheckoutComponent implements OnInit {
     method: new FormControl('stripe', Validators.required)
   });
   isPaymentLoading: boolean;
+  promos: any;
+  alreadyInstalled: boolean = false;
+  addedCode: boolean = false;
+  totalCost: any;
 
   constructor(public auth: AuthService, private afs: AngularFirestore, private fns: AngularFireFunctions) { }
 
@@ -41,6 +46,8 @@ export class CheckoutComponent implements OnInit {
     this.auth.user$.subscribe((user) => {
       if (user) {
         this.uid = user.uid;
+        this.promos = user.promos;
+        this.totalCost = user.totalCost;
 
         this.checkoutForm.patchValue({
           firstName: user.shippingAddress.firstName,
@@ -76,6 +83,59 @@ export class CheckoutComponent implements OnInit {
 
   agree(event) {
     this.doesAgree = event;
+  }
+
+  async addPromo(code) {
+    var promo = await this.afs.collection("promos", ref => ref.where("code", "==", code)).get().toPromise();
+    if (promo.docs.length > 0) {
+      var promoDoc = promo.docs[0].data();
+      
+      var alreadyInstalled = false;
+      this.promos.forEach(appliedPromo => {
+        if (appliedPromo.code == promoDoc.code) {
+          alreadyInstalled = true;
+        }
+      });
+
+      if (!alreadyInstalled) {
+
+        var newTotal = this.totalCost * promoDoc.discount;
+
+        this.afs.doc(`users/${this.uid}`).update({
+          promos: firebase.firestore.FieldValue.arrayUnion(promoDoc),
+          totalCost: newTotal
+        });
+
+        this.addedCode = true;
+        setTimeout(() => {
+          this.addedCode = false;
+        }, 4000)
+        
+      } else {
+        this.alreadyInstalled = true;
+        setTimeout(() => {
+          this.alreadyInstalled = false;
+        }, 4000)
+      }
+      
+
+
+    } else {
+      this.noPromo = true;
+      setTimeout(() => {
+        this.noPromo = false;
+      }, 4000)
+    }
+    
+    
+  }
+
+  removePromo(promo: any) {
+    var newTotal = this.totalCost / promo.discount;
+    this.afs.doc(`users/${this.uid}`).update({
+      promos: firebase.firestore.FieldValue.arrayRemove(promo),
+      totalCost: newTotal
+    });
   }
 
   async onSubmit() {
