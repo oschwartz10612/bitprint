@@ -140,7 +140,7 @@ export class ImageService {
       }),
     };
 
-    return this.http.post<ImgResponse>("http://localhost:5000/api/png", payload, httpOptions);
+    return this.http.post<ImgResponse>("https://api.bitprint.io/api/png", payload, httpOptions);
   }
 
   getStl(
